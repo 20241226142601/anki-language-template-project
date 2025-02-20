@@ -1,0 +1,591 @@
+<!--  -->
+<!-- START: Language Template -->
+<!--  -->
+
+<!-- language template css -->
+
+<style>
+
+html, .card {
+    /* 
+        content section
+    */
+    --lt-content__rounded-bg-box__bg-color: #f6f6f6;
+    --lt-content__rounded-line-box__border-color: #e0e0e0;
+    /* 
+        navigation section
+    */
+    /* Navigation Horizontal Rule */
+    --lt-navigation-hr-line-bg-color: black;
+    --lt-navigation-hr-text-bg-color: white;
+}
+
+html.night_mode, html.nightMode, .card.night_mode, .card.nightMode {
+    /* 
+        content section
+    */
+    --lt-content__rounded-bg-box__bg-color: #282828;
+    --lt-content__rounded-line-box__border-color: #424242;
+    /* 
+        navigation section
+    */
+    /* Navigation Horizontal Rule */
+    --lt-navigation-hr-line-bg-color: #faf9ff;
+    --lt-navigation-hr-text-bg-color: #282828;
+}
+
+/* 
+    content section
+*/
+
+/* container */
+
+.lt-container {
+    width: 50%;
+    margin: 0 auto;
+    text-align: left;
+    /* margin-top: 40px; */
+}
+
+@media (max-width: 900px) {
+    .lt-container {
+        width: 95%;
+    }
+}
+
+/* rounded background box */
+
+.lt-content__rounded-bg-box {
+    border-radius: 15px;
+    box-sizing: border-box;
+    background-color: var(--lt-content__rounded-bg-box__bg-color);
+    font-size: 22px;
+    text-align: left;
+}
+
+.lt-content__rounded-bg-box__title {
+    padding: 10px;
+}
+
+.lt-content__rounded-bg-box__content {
+    padding: 30px 20px;
+}
+
+/* rounded line box */
+
+.lt-content__rounded-line-box {
+    border-radius: 15px;
+    border: 2px solid var(--lt-content__rounded-line-box__border-color);
+    position: relative;
+}
+
+.lt-content__rounded-line-box__title {
+    padding: 10px;
+}
+
+.lt-content__rounded-line-box__content {
+    padding: 30px 20px;
+}
+
+/* content list */
+
+.lt-content-list {
+    text-align: left;
+}
+
+.lt-content-list__heading {
+    text-align: left;
+    font-style: italic;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    /* font-size: 26px;
+    font-weight: bold;
+    text-decoration: underline; */
+}
+
+.lt-content-list__body {
+    text-align: left;
+    font-size: 18px;
+}
+
+/* iframe */
+
+.nightMode .lt-iframe {
+    filter: invert(1) hue-rotate(180deg) brightness(0.8) contrast(0.9);
+}
+
+/* text */
+
+.lt-text-transform--uppercase {
+    text-transform: uppercase;
+}
+
+/* 
+    navigation section
+*/
+
+/* Navigation Horizontal Rule */
+
+.lt-navigation-hr {
+    text-align: center;
+    position: relative;
+}
+
+.lt-navigation-hr::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: var(--lt-navigation-hr-line-bg-color);
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 1;
+}
+
+.lt-navigation-hr span {
+    position: relative;
+    z-index: 2;
+    background-color: var(--lt-navigation-hr-text-bg-color);
+    padding: 0 10px; /* This will add some space around the text */
+}
+
+/* navigation list */
+
+.lt-navigation-list-link-style a {
+    text-decoration: none;
+    color: inherit;
+    background: none;
+    border: none;
+}
+
+/* nav moc style */
+.lt-navigation-special-nav-list {
+    text-transform: uppercase;
+}
+
+/* make go to navigation list css */
+
+/* auto to nav list */
+.lt-navigation-model.auto-to-nav-list {
+    text-align: right;
+    font-size: 12px;
+    font-weight: bold;
+}
+.lt-navigation-model.auto-to-nav-list a {
+    text-decoration: none;
+    color: inherit;
+    cursor: default;
+}
+
+</style>
+
+<!-- language template javascript -->
+
+<script>
+
+// 
+// content section
+//
+
+// generate_highlight_text
+//  - javascript call: 
+//      - language_template_generate_highlight_text.run();
+//  - html code:
+//      - <div lt-highlight-text="value" lt-highlight-text__style="bold" lt-highlight_regex="\\b__VALUE__\\b"></div>
+//  - document:
+//      - default highlight "value". but not highlight "testValue" or "valueText".
+(() => {
+    // config
+    var internal_config = {
+        style: 'bold', // bold, mark, underline
+        regex: '__VALUE__'
+    };
+    // port
+    window.language_template_generate_highlight_text = {
+        run: ( config = null ) => {
+            // set config
+            set_config( config );
+            // run
+            main();
+        }
+    };
+    // set config
+    function set_config( config ) {
+        const module_config = config != null ? config : {};
+        Object.keys(internal_config).forEach(key => {
+            if (module_config.hasOwnProperty(key)) {
+                internal_config[key] = module_config[key];
+            }
+        });
+    }
+    // highlight_word
+    function main() {
+        const tag_map = {
+            'h1': 'h1',
+            'h2': 'h2',
+            'h3': 'h3',
+            'h4': 'h4',
+            'h5': 'h5',
+            'h6': 'h6',
+            'bold': 'b',
+            'mark': 'mark',
+            'underline': 'u'
+        };
+        const highlight_list = document.querySelectorAll('[lt-highlight-text]');
+        // check
+        if ( highlight_list.length !== 0 ) {
+            highlight_list.forEach(html => {
+                const text_list_text = html.getAttribute('lt-highlight-text');
+                const highlight_style = html.getAttribute('lt-highlight-text__style') || internal_config.style;
+                const highlight_regex = html.getAttribute('lt-highlight-text__regex') || internal_config.regex;
+                const highlight_tag = tag_map[highlight_style];
+                // check
+                if ( text_list_text && highlight_tag ) {
+                    // 并且去除无效 list
+                    const text_list = text_list_text.split(',').map(word => word.trim())
+                        .filter(item => item != null && item !== "" && !Number.isNaN(item));
+                    text_list.forEach(text => {
+                        const regex = new RegExp( highlight_regex.replace(/__VALUE__/gi, text), 'g' );
+                        const new_regex_text = `<${highlight_tag}>${text}</${highlight_tag}>`;
+                        replaceTextWithRegexHTML(
+                            html, 
+                            regex, 
+                            new_regex_text
+                        );
+                    });
+                }
+            });
+        }
+    }
+    /**
+     * 使用正则表达式替换文本，并支持插入 HTML
+     * @param {Node} root - 根节点
+     * @param {RegExp} regex - 要匹配的正则表达式（必须包含 /g 标志）
+     * @param {string|function} replacement - 替换的 HTML 字符串或生成函数
+     */
+    function replaceTextWithRegexHTML(root, regex, replacement) {
+        // 确保正则表达式有全局标志
+        if (!regex.global) throw new Error('正则表达式必须包含 /g 标志');
+
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        const nodes = [];
+        
+        // 收集所有包含匹配项的文本节点
+        while (walker.nextNode()) {
+            const node = walker.currentNode;
+            if (regex.test(node.textContent)) {
+                nodes.push(node);
+                regex.lastIndex = 0; // 重置正则状态
+            }
+        }
+
+        nodes.forEach(node => {
+            const parent = node.parentNode;
+            let text = node.textContent;
+            const matches = Array.from(text.matchAll(regex));
+            const frag = document.createDocumentFragment();
+            let lastIndex = 0;
+
+            matches.forEach(match => {
+                const [fullMatch, ...groups] = match;
+                const startIndex = match.index;
+                const endIndex = startIndex + fullMatch.length;
+
+                // 添加前面的非匹配文本
+                if (startIndex > lastIndex) {
+                    frag.appendChild(
+                        document.createTextNode(text.slice(lastIndex, startIndex))
+                    );
+                }
+
+                // 生成替换内容
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = typeof replacement === 'function' 
+                    ? replacement(fullMatch, ...groups, match.index, match.input) 
+                    : replacement;
+
+                // 插入新节点
+                while (tempDiv.firstChild) {
+                    frag.appendChild(tempDiv.firstChild);
+                }
+
+                lastIndex = endIndex;
+            });
+
+            // 添加剩余文本
+            if (lastIndex < text.length) {
+                frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+            }
+
+            // 替换原始节点
+            parent.replaceChild(frag, node);
+        });
+    }
+})();
+
+// generate_content_html
+(() => {
+    // config
+    var internal_config = {
+        class: null, // class name
+        html: null // html code
+    };
+    // port
+    window.language_template_generate_content_html = {
+        run: ( config = null ) => {
+            // set config
+            set_config( config );
+            // check
+            if ( internal_config.class == null && internal_config.html == null) {
+                console.error('language_template_generate_content_html: class and html is required.');
+                return false;
+            }
+            // run
+            main();
+        }
+    };
+    // set config
+    function set_config( config ) {
+        const module_config = config != null ? config : {};
+        Object.keys(internal_config).forEach(key => {
+            if (module_config.hasOwnProperty(key)) {
+                internal_config[key] = module_config[key];
+            }
+        });
+    }
+    // run
+    function main () {
+        const content = document.getElementsByClassName(internal_config.class)[0];
+        // is not class, return false.
+        if ( !content ) return false;
+        // html and dictionary list
+        const html = internal_config.html;
+        content.innerHTML = html;
+    }
+})();
+
+// generate_iframe_html 
+(() => {
+    var internal_config = {
+        name: null, // dictionary name
+        url: null, // url
+        class: null, // class name
+        html: null, // html code
+    };
+    // port
+    window.language_template_generate_iframe_html = {
+        run: ( config = null ) => {
+            // set config
+            set_config( config );
+            // check
+            if ( internal_config.name == null && internal_config.url == null && internal_config.class == null && internal_config.html == null) {
+                console.error('language_template_generate_iframe_html: name, url, class and html is required.');
+                return false;
+            }
+            // load
+            iframe_load( internal_config.name );
+        },
+        get_default_config: () => {
+            return internal_config;
+        }
+    };
+    // set config
+    function set_config( config ) {
+        const module_config = config != null ? config : {};
+        Object.keys(internal_config).forEach(key => {
+            if (module_config.hasOwnProperty(key)) {
+                internal_config[key] = module_config[key];
+            }
+        });
+    }
+    function iframe_load( dict_name ) {
+        const dict_iframe_data = internal_config;
+        const dictionary_name = dict_name;
+        const dictionary_html = dict_iframe_data.html;
+        const dictionary_url = dict_iframe_data.url;
+        const dictionary_class = dict_iframe_data.class;
+
+        // console.log(dictionary_html);
+        const dictionary_content = document.getElementsByClassName(dictionary_class)[0];
+
+        // check
+        if ( !dictionary_content ) return false;
+
+        dictionary_content.innerHTML = dictionary_html;
+
+        // console.log(dictionary_html);
+        
+        const dict_iframe = document.getElementById( `${ dictionary_name }_iframe` );
+        const dict_url = document.getElementById( `${ dictionary_name }_url` );
+        const dict_switch_scroll = document.getElementById( `${ dictionary_name }_switch_scroll`);
+        
+        // check
+        if ( !dict_iframe )  return false;
+
+        dict_iframe.setAttribute('scrolling', 'no');
+        // switch scroll
+        dict_switch_scroll.addEventListener('click', function(event) {
+            // check scrolling
+            if (dict_iframe.getAttribute('scrolling') === 'no') {
+                dict_iframe.removeAttribute('scrolling');
+            } else {
+                dict_iframe.setAttribute('scrolling', 'no');
+            }
+        });
+
+        dict_iframe.src = dictionary_url;
+        dict_url.href = dictionary_url;
+        dict_url.innerHTML = dictionary_url;
+    }
+})();
+
+// 
+// navigation section
+//
+
+// generate_navigation_list
+(() => {
+    // config
+    var internal_config = {};
+    // port
+    window.language_template_generate_navigation_list = {
+        run: () => {
+            const element = document.getElementsByClassName("lt-generate-navigation-list");
+            // check
+            if ( element.length === 0 ) return false;
+            // run
+            element[0].innerHTML = get_all_navigation_html();
+            auto_add_to_nav_section_div( "navigation" );
+            generate_navigation_url();
+        }
+    };
+    // get_all_navigation_html
+    function get_all_navigation_html () {
+        // 获取所有 class 为 navigation-mark 的 div 元素
+        const navigationDivs = document.querySelectorAll('.lt-navigation-mark');
+        // 初始化一个空字符串用于拼接 HTML
+        let html = '';
+        // 遍历每个 div
+        navigationDivs.forEach(div => {
+            // 提取 id
+            const id = div.id;
+            // style
+            const style = div.getAttribute('lt-generate-navigation-list-style');
+            const tag_map = {
+                'mark': 'mark',
+                'underline': 'u',
+                'bold': 'b',
+                'h1': 'h1',
+                'h2': 'h2',
+                'h3': 'h3',
+                'h4': 'h4',
+                'h5': 'h5',
+                'h6': 'h6',
+                'blockquote': 'blockquote'
+            };
+            const tag = tag_map[style] || null;
+            if ( tag ) {
+                html += `
+                <p>
+                    <a href="#${id}" onclick="language_template_method.scroll_to_div('${id}'); return false;">
+                        <${ tag }>to ${id}</${ tag }>
+                    </a>
+                </p>
+                `;
+            } else {
+                html += `
+                <p>
+                    <a href="#${id}" onclick="language_template_method.scroll_to_div('${id}'); return false;">
+                        to ${id}
+                    </a>
+                </p>
+                `;
+            }
+        });
+        return html;
+    }
+    // auto_add_to_nav_section_div 
+    function auto_add_to_nav_section_div ( id ) {
+        var to_nav_id = id;
+        var allDivContainers = document.querySelectorAll('.lt-make-navigation-list-return');
+        // 遍历并为每个div添加一个新的div
+        allDivContainers.forEach(function(container) {
+            // 使用HTML字符串拼接创建一个新的p元素和a元素
+            var htmlString = `
+            <p class="lt-navigation-model auto-to-nav-list">
+                <a href="#${to_nav_id}" onclick="language_template_method.scroll_to_div('${to_nav_id}'); return false;">to ${to_nav_id}</a>
+            </p>`;
+            // 将拼接好的HTML字符串插入到容器div的末尾
+            container.innerHTML += htmlString;
+        });
+    }
+    // generate navigation url
+    function generate_navigation_url () {
+        const generate_navigation_url_list = document.querySelectorAll('[lt-generate-navigation-url]');
+        // check
+        if ( generate_navigation_url_list.length !== 0 )
+        {
+            generate_navigation_url_list.forEach(html => {
+                const data = html.getAttribute('lt-generate-navigation-url').split(":");
+                // check
+                if ( data.length === 2 )
+                {
+                    const type = data[0].toLowerCase();
+                    const id = data[1];
+                    if ( type === 'id' ) {
+                        html.innerHTML = `
+                        <a href="#${id}" onclick="language_template_method.scroll_to_div('${id}'); return false;">
+                            to ${id}
+                        </a>
+                        `;
+                    }
+                }
+            });
+        }
+    }
+})();
+
+// 
+// language template section
+// 
+
+// language template method
+(() => {
+    // port
+    window.language_template_method = {
+        select_unique_class_text: ( class_name ) => {
+            select_unique_class_text(class_name);
+        },
+        scroll_to_div: ( id ) => {
+            scroll_to_div(id);
+        },
+    }
+    // select_unique_class_text
+    function select_unique_class_text( class_name ) {
+        const element = document.getElementsByClassName(class_name)[0];
+        if ( element ) {
+            const selection = window.getSelection();
+            selection.removeAllRanges(); // 移除所有范围
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            selection.addRange(range);
+        }
+    }
+    // scroll_to_div
+    function scroll_to_div( id ) {
+        var element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({
+                behavior: 'smooth' // 平滑滚动
+            });
+        }
+    }
+})();
+
+</script>
+
+<!--  -->
+<!-- END: Language Template -->
+<!--  -->
