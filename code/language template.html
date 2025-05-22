@@ -15,7 +15,7 @@ html, .card {
     /* 
         navigation section
     */
-    /* Navigation Horizontal Rule */
+	/* Navigation Horizontal Rule */
     --lt-navigation-hr-line-bg-color: black;
     --lt-navigation-hr-text-bg-color: white;
 }
@@ -29,13 +29,13 @@ html.night_mode, html.nightMode, .card.night_mode, .card.nightMode {
     /* 
         navigation section
     */
-    /* Navigation Horizontal Rule */
+	/* Navigation Horizontal Rule */
     --lt-navigation-hr-line-bg-color: #faf9ff;
     --lt-navigation-hr-text-bg-color: #282828;
 }
 
 /* 
-    content section
+	content section
 */
 
 /* container */
@@ -118,11 +118,11 @@ html.night_mode, html.nightMode, .card.night_mode, .card.nightMode {
 /* text */
 
 .lt-text-transform--uppercase {
-    text-transform: uppercase;
+	text-transform: uppercase;
 }
 
 /* 
-    navigation section
+	navigation section
 */
 
 /* Navigation Horizontal Rule */
@@ -184,6 +184,102 @@ html.night_mode, html.nightMode, .card.night_mode, .card.nightMode {
 <!-- language template javascript -->
 
 <script>
+
+//
+//  audio section
+//
+
+//  stop_audio_play
+//  - document
+//      - default play audio number zero.
+(() => {
+    // config
+    var internal_config = {
+    };
+    // port
+    window.language_template_stop_audio_play = {
+        run: ( number = 0 ) => {
+            // run
+            run( number );
+        },
+        test: ( number = 0 ) => {
+            // run
+            run( number );
+        },
+    };
+    // run
+    function run( number = 0 ) {
+        play_audio_once( number );
+    }
+    // audo play audio
+    // - but play the first audio.
+    function play_audio( play_number = 0 ) {
+        var elem = document.querySelectorAll(".soundLink, .replay-button"); // AnkiMobile & AnkiDroid / AnkiDesktop
+        if ( elem[play_number] ) {
+            elem[play_number].click();
+        }
+    }
+    function play_audio_once ( play_number = 0 ) {
+        if (typeof onShownHook !== 'undefined' && onShownHook.push) {
+            onShownHook.push( play_audio(play_number) );
+        } else {
+            play_audio(play_number);
+        }
+    }
+})();
+
+//  generate_click_play_audio
+//  - html code:
+//      - <div lt-click-play-audio="id:audio-id"></div>
+//      - <div lt-click-play-audio="class:audio-class"></div>
+(() => {
+    // config
+    var internal_config = {
+    };
+    // port
+    window.language_template_generate_click_play_audio = {
+        run: () => {
+            // run
+            run();
+        }
+    };
+    // run
+    function run() {
+        play_sound_set_click_event();
+    }
+    // play audio click event
+    // - is click
+    function play_sound_set_click_event() {
+        const play_list = document.querySelectorAll('[lt-click-play-audio]');
+        // check
+        if ( play_list.length !== 0 ) {
+            play_list.forEach(element => {
+                element.addEventListener("click", play_sound);
+            });
+        }
+    }
+    function play_sound( event ) {
+        const data = event.target.closest("[lt-click-play-audio]").getAttribute("lt-click-play-audio").split(":");
+        if ( data.length === 2 ) {
+            const type = data[0].toLowerCase();
+            const id = data[1];
+            if ( type === 'id' ) {
+                const sound = document.getElementById(id);
+                // check
+                if ( !sound ) return false;
+                // play
+                sound.querySelector(".replay-button").click();
+            }
+            if ( type === 'class' ) {
+                const sound = document.getElementsByClassName(id)[0];
+                // check
+                if ( !sound ) return false;
+                // play
+                sound.querySelector(".replay-button").click();
+            }
+        }
+    }
+})();
 
 // 
 // content section
@@ -373,6 +469,7 @@ html.night_mode, html.nightMode, .card.night_mode, .card.nightMode {
         url: null, // url
         class: null, // class name
         html: null, // html code
+        iframe_scrolling: false // iframe scrolling
     };
     // port
     window.language_template_generate_iframe_html = {
@@ -406,6 +503,7 @@ html.night_mode, html.nightMode, .card.night_mode, .card.nightMode {
         const dictionary_html = dict_iframe_data.html;
         const dictionary_url = dict_iframe_data.url;
         const dictionary_class = dict_iframe_data.class;
+        const dictionary_scrolling = dict_iframe_data.iframe_scrolling;
 
         // console.log(dictionary_html);
         const dictionary_content = document.getElementsByClassName(dictionary_class)[0];
@@ -424,7 +522,15 @@ html.night_mode, html.nightMode, .card.night_mode, .card.nightMode {
         // check
         if ( !dict_iframe )  return false;
 
-        dict_iframe.setAttribute('scrolling', 'no');
+        // default iframe scrolling
+        if ( dictionary_scrolling ) {
+            // check scrolling
+            if (dict_iframe.getAttribute('scrolling') === 'no') {
+                dict_iframe.removeAttribute('scrolling');
+            }
+        } else {
+            dict_iframe.setAttribute('scrolling', 'no');
+        }
         // switch scroll
         dict_switch_scroll.addEventListener('click', function(event) {
             // check scrolling
@@ -447,80 +553,80 @@ html.night_mode, html.nightMode, .card.night_mode, .card.nightMode {
 
 // generate_navigation_list
 (() => {
-    // config
-    var internal_config = {};
-    // port
-    window.language_template_generate_navigation_list = {
-        run: () => {
-            const element = document.getElementsByClassName("lt-generate-navigation-list");
-            // check
-            if ( element.length === 0 ) return false;
-            // run
-            element[0].innerHTML = get_all_navigation_html();
-            auto_add_to_nav_section_div( "navigation" );
+	// config
+	var internal_config = {};
+	// port
+	window.language_template_generate_navigation_list = {
+		run: () => {
+			const element = document.getElementsByClassName("lt-generate-navigation-list");
+			// check
+			if ( element.length === 0 ) return false;
+			// run
+			element[0].innerHTML = get_all_navigation_html();
+			auto_add_to_nav_section_div( "navigation" );
             generate_navigation_url();
-        }
-    };
-    // get_all_navigation_html
-    function get_all_navigation_html () {
-        // 获取所有 class 为 navigation-mark 的 div 元素
-        const navigationDivs = document.querySelectorAll('.lt-navigation-mark');
-        // 初始化一个空字符串用于拼接 HTML
-        let html = '';
-        // 遍历每个 div
-        navigationDivs.forEach(div => {
-            // 提取 id
-            const id = div.id;
-            // style
-            const style = div.getAttribute('lt-generate-navigation-list-style');
-            const tag_map = {
-                'mark': 'mark',
-                'underline': 'u',
-                'bold': 'b',
-                'h1': 'h1',
-                'h2': 'h2',
-                'h3': 'h3',
-                'h4': 'h4',
-                'h5': 'h5',
-                'h6': 'h6',
+		}
+	};
+	// get_all_navigation_html
+	function get_all_navigation_html () {
+		// 获取所有 class 为 navigation-mark 的 div 元素
+		const navigationDivs = document.querySelectorAll('.lt-navigation-mark');
+		// 初始化一个空字符串用于拼接 HTML
+		let html = '';
+		// 遍历每个 div
+		navigationDivs.forEach(div => {
+			// 提取 id
+			const id = div.id;
+			// style
+			const style = div.getAttribute('lt-generate-navigation-list-style');
+			const tag_map = {
+				'mark': 'mark',
+				'underline': 'u',
+				'bold': 'b',
+				'h1': 'h1',
+				'h2': 'h2',
+				'h3': 'h3',
+				'h4': 'h4',
+				'h5': 'h5',
+				'h6': 'h6',
                 'blockquote': 'blockquote'
-            };
-            const tag = tag_map[style] || null;
-            if ( tag ) {
-                html += `
-                <p>
-                    <a href="#${id}" onclick="language_template_method.scroll_to_div('${id}'); return false;">
-                        <${ tag }>to ${id}</${ tag }>
-                    </a>
-                </p>
-                `;
-            } else {
-                html += `
-                <p>
-                    <a href="#${id}" onclick="language_template_method.scroll_to_div('${id}'); return false;">
-                        to ${id}
-                    </a>
-                </p>
-                `;
-            }
-        });
-        return html;
-    }
-    // auto_add_to_nav_section_div 
-    function auto_add_to_nav_section_div ( id ) {
-        var to_nav_id = id;
-        var allDivContainers = document.querySelectorAll('.lt-make-navigation-list-return');
-        // 遍历并为每个div添加一个新的div
-        allDivContainers.forEach(function(container) {
-            // 使用HTML字符串拼接创建一个新的p元素和a元素
-            var htmlString = `
-            <p class="lt-navigation-model auto-to-nav-list">
-                <a href="#${to_nav_id}" onclick="language_template_method.scroll_to_div('${to_nav_id}'); return false;">to ${to_nav_id}</a>
-            </p>`;
-            // 将拼接好的HTML字符串插入到容器div的末尾
-            container.innerHTML += htmlString;
-        });
-    }
+			};
+			const tag = tag_map[style] || null;
+			if ( tag ) {
+				html += `
+				<p>
+					<a href="#${id}" onclick="language_template_method.scroll_to_div('${id}'); return false;">
+						<${ tag }>to ${id}</${ tag }>
+					</a>
+				</p>
+				`;
+			} else {
+				html += `
+				<p>
+					<a href="#${id}" onclick="language_template_method.scroll_to_div('${id}'); return false;">
+						to ${id}
+					</a>
+				</p>
+				`;
+			}
+		});
+		return html;
+	}
+	// auto_add_to_nav_section_div 
+	function auto_add_to_nav_section_div ( id ) {
+		var to_nav_id = id;
+		var allDivContainers = document.querySelectorAll('.lt-make-navigation-list-return');
+		// 遍历并为每个div添加一个新的div
+		allDivContainers.forEach(function(container) {
+			// 使用HTML字符串拼接创建一个新的p元素和a元素
+			var htmlString = `
+			<p class="lt-navigation-model auto-to-nav-list">
+				<a href="#${to_nav_id}" onclick="language_template_method.scroll_to_div('${to_nav_id}'); return false;">to ${to_nav_id}</a>
+			</p>`;
+			// 将拼接好的HTML字符串插入到容器div的末尾
+			container.innerHTML += htmlString;
+		});
+	}
     // generate navigation url
     function generate_navigation_url () {
         const generate_navigation_url_list = document.querySelectorAll('[lt-generate-navigation-url]');
@@ -547,9 +653,126 @@ html.night_mode, html.nightMode, .card.night_mode, .card.nightMode {
     }
 })();
 
+// navigate_to_element
+(() => {
+    // config
+    var internal_config = {
+        type: "single", // single, switch, 
+        target: [],
+        check: true,
+    };
+    // port
+    window.language_template_navigate_to_element = {
+        run
+    };
+    // run
+    function run( config = {} ) {
+        internal_config = language_template_method.merge_module_config( internal_config, config );
+        go_to_type = internal_config.type;
+        go_to_list = internal_config.target;
+        // check
+        if ( go_to_type === 'single' ) {
+            go_to_single( go_to_list );
+        } 
+        else if ( go_to_type === 'switch' ) {
+            go_to_switch( go_to_list );
+        }
+        else {
+            return false;
+        }
+    }
+    // go_to_single
+    function go_to_single ( id_list ) {
+        const to_div_id = id_list.find(id => {
+            return document.getElementById(id) !== null;
+        });
+        language_template_method.scroll_to_div( to_div_id )
+    }
+    // go_to_switch
+    function go_to_switch ( id_list ) {
+        id_list = id_list.filter(id => {
+            return document.getElementById(id) !== null;
+        });
+        const id_count = id_list.length;
+        let answer_id;
+        // check
+        if ( id_count == 0 ) return false;
+        for (const [index, item] of id_list.entries()) {
+            if ( window.go_to_answer_div_now === null ) 
+            {
+                window.go_to_answer_div_now = item;
+                answer_id = item;
+                break;
+            } 
+            if ( window.go_to_answer_div_now === item )
+            {
+                if ( id_count === index + 1 ) {
+                    answer_id = id_list[0];
+                } else {
+                    answer_id = id_list[index + 1];
+                }
+            }
+        }
+        if ( answer_id ) {
+            window.go_to_answer_div_now = answer_id;
+            language_template_method.scroll_to_div( answer_id );
+        }
+    }
+})();
+
 // 
 // language template section
-// 
+//
+
+// generate_click_select_text
+(() => {
+    // config
+    var internal_config = {
+    };
+    // port
+    window.language_template_generate_click_select_text = {
+        run: () => {
+            // run
+            main();
+        }
+    };
+    // run
+    function main() {
+        select_text_set_click_event();
+    }
+    // select_text_set_click_event
+    function select_text_set_click_event() {
+        const select_text_list = document.querySelectorAll('[lt-click-select-text]');
+        // check
+        if ( select_text_list.length !== 0 ) {
+            select_text_list.forEach(element => {
+                element.addEventListener("click", select_text);
+            });
+        }
+    }
+    // select_text
+    function select_text( event ) {
+        const data = event.target.closest("[lt-click-select-text]").getAttribute("lt-click-select-text").split(":");
+        if ( data.length === 2 ) {
+            const type = data[0].toLowerCase();
+            const text = data[1];
+            let element = null;
+            if ( type === 'id' ) {
+                element = document.getElementById(text);
+            }
+            if ( type === 'class' ) {
+                element = document.getElementsByClassName(text)[0];
+            }
+            if ( element ) {
+                const selection = window.getSelection();
+                selection.removeAllRanges(); // 移除所有范围
+                const range = document.createRange();
+                range.selectNodeContents(element);
+                selection.addRange(range);
+            }
+        }
+    }
+})();
 
 // language template method
 (() => {
@@ -561,17 +784,23 @@ html.night_mode, html.nightMode, .card.night_mode, .card.nightMode {
         scroll_to_div: ( id ) => {
             scroll_to_div(id);
         },
+        return_card_side: () => {
+            return return_card_side();
+        },
+        return_card_side: () => {
+            return return_card_side();
+        },
+        merge_module_config,
     }
-    // select_unique_class_text
-    function select_unique_class_text( class_name ) {
-        const element = document.getElementsByClassName(class_name)[0];
-        if ( element ) {
-            const selection = window.getSelection();
-            selection.removeAllRanges(); // 移除所有范围
-            const range = document.createRange();
-            range.selectNodeContents(element);
-            selection.addRange(range);
-        }
+    // merge_module_config
+    function merge_module_config( default_config, new_config ) {
+        const module_config = new_config != null ? new_config : {};
+        Object.keys(default_config).forEach(key => {
+            if (module_config.hasOwnProperty(key)) {
+                default_config[key] = module_config[key];
+            }
+        });
+        return default_config;
     }
     // scroll_to_div
     function scroll_to_div( id ) {
@@ -581,6 +810,32 @@ html.night_mode, html.nightMode, .card.night_mode, .card.nightMode {
                 behavior: 'smooth' // 平滑滚动
             });
         }
+    }
+    // return_card_side
+    //  id or class = lt-variable__is-front-side
+    //  id or class = lt-variable__is-back-side
+    function return_card_side() {
+        // front
+        if (
+            (
+                document.getElementsByClassName('lt-variable__is-front-side').length !== 0 &&
+                document.getElementsByClassName('lt-variable__is-back-side').length === 0
+            ) || (
+                document.getElementById('lt-variable__is-front-side').length !== 0 &&
+                document.getElementById('lt-variable__is-back-side').length === 0
+            )
+        ) {
+            return 'front-side';
+        }
+        // back
+        if (
+            document.getElementsByClassName('lt-variable__is-back-side').length !== 0 ||
+            document.getElementById('lt-variable__is-back-side').length !== 0
+        ) {
+            return 'front-side';
+        }
+        // false
+        return false;
     }
 })();
 
